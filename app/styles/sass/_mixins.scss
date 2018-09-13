@@ -1,0 +1,399 @@
+
+
+/*  **********************************************
+    Media Queries.
+    ********************************************** */
+
+// Define the breakpoints
+$breakpoint-small: 600px;
+$breakpoint-med-small: 960px;
+$breakpoint-med: 1175px;
+
+@mixin screen($size, $type: max, $pixels: $breakpoint-small) {
+  @if $size == 'small' {
+    @media screen and ($type + -width: $breakpoint-small) {
+        @content;
+    }
+  }
+  @else if $size == 'med-small' {
+    @media screen and ($type + -width: $breakpoint-med-small) {
+        @content;
+    }
+  }
+  @else if $size == 'med' {
+    @media screen and ($type + -width: $breakpoint-med) {
+        @content;
+    }
+  }
+ @else if $size == 'large' {
+    @media screen and ($type + -width: $breakpoint-med) {
+        @content;
+    }
+  }
+  @else if $size == 'custom' {
+    @media screen and ($type + -width: $pixels + px) {
+     @content;
+    }
+  }
+  @else {
+    @content;
+  }
+}
+
+/* Example Usage
+
+.foo {
+  @include screen(large) {
+    width: 20%;
+  }
+  @include screen(med) {
+    width: 40%;
+  }
+  @include screen(med-small) {
+    width: 60%;
+  }
+  @include screen(small) {
+    width: 80%;
+  }
+  @include screen(custom, max, 400) {
+    width: 100%;
+  }
+}
+*/
+
+
+/*  **********************************************
+    Colour Themes.
+    ********************************************** */
+
+//Create the mixin for theme colors
+@mixin theme($name, $color) {
+  // Define colors in your theme
+  $primary: $color;
+  $secondary: lighten(adjust-hue($color, 20), 10%);
+  // Add your classes with css colors added
+  .#{$name} {
+    .element {
+      color: $primary;
+    }
+    .other-element {
+      background: $secondary;
+    }
+  }
+}
+
+/* Example Usage
+
+@include theme(theme-banana, yellow);
+// Output
+.theme-banana .element {
+  color: yellow;
+}
+.theme-banana .other-element {
+  background: #bbff33;
+}
+*/
+
+
+
+/*  **********************************************
+    Centre Elements.
+    ********************************************** */
+
+// Define vertical, horizontal, or both position
+@mixin center($position) {
+  position: absolute;
+
+  @if $position == 'vertical' {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  @else if $position == 'horizontal' {
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translate(-50%);
+  }
+  @else if $position == 'both' {
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Example Usage
+
+.foo {
+  @include center(both);
+}
+.foo-parent {
+  position: relative;
+}
+
+*/
+
+
+
+/*  **********************************************
+    Clearfix.
+    ********************************************** */
+// Clearfix mixin
+%clearfix {
+  *zoom: 1;
+  &:before, &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+/* Example Usage
+
+.container-with-floated-children {
+  @extend %clearfix;
+}
+*/
+
+
+
+/*  **********************************************
+    Consistent Font Sizes.
+    ********************************************** */
+// Define default font size
+@function calculateRem($size) {
+  $remSize: $size / 16px;
+  @return $remSize * 1rem;
+}
+
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: calculateRem($size);
+}
+
+/* Example Usage
+
+p {
+  @include font-size(14px)
+}
+
+* Output:
+
+p {
+  font-size: 14px; //For unsupported browsers
+  font-size: 0.8rem;
+}
+
+*/
+
+/*  **********************************************
+    Retina Images.
+    ********************************************** */
+@mixin image-2x($image, $width, $height) {
+  @media (min--moz-device-pixel-ratio: 1.3),
+         (-o-min-device-pixel-ratio: 2.6/2),
+         (-webkit-min-device-pixel-ratio: 1.3),
+         (min-device-pixel-ratio: 1.3),
+         (min-resolution: 1.3dppx) {
+    background-image: url($image);
+    background-size: $width $height;
+  }
+}
+
+
+/* Example Usage
+
+div.logo {
+  background: url("logo.png") no-repeat;
+  @include image-2x("logo2x.png", 100px, 25px);
+}
+*/
+
+/*  **********************************************
+    Animations.
+    ********************************************** */
+
+/* - - - - - - - - - - - - - - - - - - - - - - -
+    Defaults
+*/
+
+// count        Specifies the number of times an animation is played. Default 1
+$countDefault      : 1 !default;
+// duration     Specifies how many seconds or milliseconds an animation takes to complete one cycle. Default 0
+$durationDefault   : 1s !default;
+// delay        Specifies when the animation will start. Default 0
+$delayDefault      : 0s !default;
+// function     Describes how the animation will progress over one cycle of its duration. Default "ease"
+$functionDefault   : ease !default;
+// fill-mode    Specifies if the effects of an animation are before the animation starts and after it ends.
+$fillDefault       : both;
+// visibility   Determines whether or not a transformed element is visible when it is not facing the screen.
+$visibilityDefault : hidden !default;
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - -
+    Properties
+*/
+
+@mixin count($count: 1) {
+  // -webkit-animation-iteration-count: $count;
+  //    -moz-animation-iteration-count: $count;
+  //     -ms-animation-iteration-count: $count;
+  //      -o-animation-iteration-count: $count;
+          animation-iteration-count: $count;
+}
+
+@mixin duration($duration: 1s) {
+  // -webkit-animation-duration: $duration;
+  //    -moz-animation-duration: $duration;
+  //     -ms-animation-duration: $duration;
+  //      -o-animation-duration: $duration;
+          animation-duration: $duration;
+}
+
+@mixin delay($delay: .2s) {
+  // -webkit-animation-delay: $delay;
+  //    -moz-animation-delay: $delay;
+  //     -ms-animation-delay: $delay;
+  //      -o-animation-delay: $delay;
+          animation-delay: $delay;
+}
+
+@mixin function($function: ease) {
+  // -webkit-animation-timing-function: $function;
+  //    -moz-animation-timing-function: $function;
+  //     -ms-animation-timing-function: $function;
+  //      -o-animation-timing-function: $function;
+          animation-timing-function: $function;
+}
+
+@mixin fill-mode($fill: both) {
+  // -webkit-animation-fill-mode: $fill;
+  //    -moz-animation-fill-mode: $fill;
+  //     -ms-animation-fill-mode: $fill;
+  //      -o-animation-fill-mode: $fill;
+          animation-fill-mode: $fill;
+}
+
+@mixin visibility($visibility: hidden) {
+  // -webkit-backface-visibility: $visibility;
+  //    -moz-backface-visibility: $visibility;
+  //     -ms-backface-visibility: $visibility;
+  //      -o-backface-visibility: $visibility;
+          backface-visibility: $visibility;
+}
+
+@mixin transform($property) {
+  // -webkit-transform: $property;
+  //    -moz-transform: $property;
+  //     -ms-transform: $property;
+  //      -o-transform: $property;
+          transform: $property;
+}
+
+@mixin transform-origin($transform-origin: center center) {
+  // -webkit-transform-origin: $transform-origin;
+  //    -moz-transform-origin: $transform-origin;
+  //     -ms-transform-origin: $transform-origin;
+  //      -o-transform-origin: $transform-origin;
+          transform-origin: $transform-origin;
+}
+
+@mixin transform-style($transform-style: flat) {
+  // -webkit-transform-style: $transform-style;
+  //    -moz-transform-style: $transform-style;
+  //      -o-transform-style: $transform-style;
+          transform-style: $transform-style;
+}
+
+@mixin animation-name($animation-name) {
+  // -webkit-animation-name: $animation-name;
+  //    -moz-animation-name: $animation-name;
+  //     -ms-animation-name: $animation-name;
+  //      -o-animation-name: $animation-name;
+          animation-name: $animation-name;
+}
+
+@mixin keyframes($animation-name) {
+  // @-webkit-keyframes #{$animation-name} {
+  //   @content;
+  // }
+
+  // @-moz-keyframes #{$animation-name} {
+  //   @content;
+  // }
+
+  // @-ms-keyframes #{$animation-name} {
+  //   @content;
+  // }
+
+  // @-o-keyframes #{$animation-name} {
+  //   @content;
+  // }
+
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+/* example usage
+
+@include keyframes(bounceIn) {
+  0% {
+    opacity: 0;
+    @include transform(scale(.3));
+  }
+  50% {
+    opacity: 1;
+    @include transform(scale(1.05));
+  }
+  70% {
+    @include transform(scale(.9));
+  }
+  100% {
+    @include transform(scale(1));
+  }
+}
+
+@mixin bounceIn($count: $countDefault, $duration: $durationDefault, $delay: $delayDefault, $function: $functionDefault, $fill: $fillDefault, $visibility: $visibilityDefault) {
+  @include animation-name(bounceIn);
+  @include count($count);
+  @include duration($duration);
+  @include delay($delay);
+  @include function($function);
+  @include fill-mode($fill);
+  @include visibility($visibility);
+}
+
+*/
+
+
+/*  **********************************************
+    External Fonts.
+
+    Simply include any font files in a directory, and add the “@include” tag
+    in your styles, which will grab all the files from your chosen folder.
+    ********************************************** */
+
+@mixin font-face($font-name, $file-name, $weight: normal, $style: normal) {
+  @font-face {
+    font-family: quote($font-name);
+    src: url($file-name + '.eot');
+    src: url($file-name + '.eot?#iefix')  format('embedded-opentype'),
+         url($file-name + '.woff') format('woff'),
+         url($file-name + '.ttf')  format('truetype'),
+         url($file-name + '.svg##{$font-name}')  format('svg');
+    font-weight: $weight;
+    font-style: $style;
+  }
+ }
+
+
+/* example usage
+    @include font-face('gotham', '/fonts/gotham');
+*/

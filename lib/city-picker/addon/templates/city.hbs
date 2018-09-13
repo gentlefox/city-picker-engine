@@ -1,0 +1,18 @@
+<div class="card hoverable">
+  <div class="card-image">
+    <img class="city-thumbnail"
+      src="{{model.thumbnailUrl}}"
+      alt="{{model.label}}"
+      />
+  </div>
+
+  <div class="card-content">
+    <span class="city-headline">{{model.label}}</span>
+  </div>
+
+  <div class="card-action">
+    {{#link-to "index"}}
+      Index
+    {{/link-to}}
+  </div>
+</div>
